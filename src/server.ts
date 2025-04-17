@@ -2,7 +2,6 @@ import { Server } from 'http';
 import mongoose from 'mongoose';
 import { App } from './app';
 import Config from './app/Config';
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 let server: Server;
 
 async function main() {
