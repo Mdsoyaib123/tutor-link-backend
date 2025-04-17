@@ -1,4 +1,4 @@
-import { Document } from "mongoose";
+import { Document, ObjectId } from "mongoose";
 import { UserRole } from "../../type/user.type";
 
 export interface IUser extends Document {
@@ -20,4 +20,6 @@ export interface IUser extends Document {
 
   createdAt?: Date;
   updatedAt?: Date;
+  interactedTutors: ObjectId;
+  lastBookingDate: Date;
 }
