@@ -1,11 +1,20 @@
 import { Types } from "mongoose";
 
 export interface IBooking {
-  _id?: Types.ObjectId;
   student: Types.ObjectId;
-  tutorId: Types.ObjectId;
-  dateTime: Date;
-  duration: number;
-  price: number;
-  status: "pending" | "completed" | "canceled";
+  tutor: Types.ObjectId;
+  subject: string;
+  date: Date;
+  hours: number;
+  hourlyRate: number;
+  totalAmount?: number;
+  status?:
+    | "pending"
+    | "accepted"
+    | "rejected"
+    | "paid"
+    | "completed"
+    | "cancelled";
+  createdAt?: Date;
+  isPaid: boolean;
 }
