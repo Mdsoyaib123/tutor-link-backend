@@ -23,6 +23,9 @@ const userSchema: Schema<IUser> = new Schema(
     ],
     ratings: [{ type: Number }],
     earnings: { type: Number, default: 0 },
+    // NEW student-specific tracking fields
+    interactedTutors: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    lastBookingDate: { type: Date },
   },
   { timestamps: true }
 );
