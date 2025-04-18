@@ -14,7 +14,7 @@ const userSchema: Schema<IUser> = new Schema(
 
     // Only for tutors
     bio: { type: String },
-    subjects: [{ type: String }],
+    subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Subject" }],
     availability: [
       {
         day: String,
