@@ -5,8 +5,6 @@ import { USER_ROLE } from './user.constant';
 export interface TUser extends Document {
   _id: Types.ObjectId;
   name: string;
-  address: string;
-  phone: string;
   email: string;
   password: string;
   role: 'Student' | 'Tutor';
@@ -28,7 +26,6 @@ export interface TUser extends Document {
     },
   ];
   averageRating?: Number;
-  profilePicture?: string;
   isBlocked: boolean;
   isDeleted: boolean;
   createdAt: Date;

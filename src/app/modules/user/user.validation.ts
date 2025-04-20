@@ -6,8 +6,6 @@ const availabilitySchema = z.object({
 const userValidationSchema = z.object({
   body: z.object({
     name: z.string().min(1, 'Name is required'),
-    address: z.string().min(1, 'Address is required'),
-    phone: z.string().min(10, 'Phone number must be at least 10 digits'),
     email: z.string().email('Invalid email address'),
     password: z.string().min(6, 'Password must be at least 6 characters long'),
     role: z.enum(['Student', 'Tutor']),
@@ -26,7 +24,6 @@ const userValidationSchema = z.object({
       })
     ).optional(),
     averageRating: z.number().min(0).max(5).optional(),
-    profilePicture: z.string().optional(),
     isBlocked: z.boolean().default(false),
     isDeleted: z.boolean().default(false),
   }),
