@@ -1,21 +1,18 @@
-import cors from "cors";
-import express, { Application } from "express";
-import router from "./app/routes";
-import globalErrorHandle from "./app/middlewares/globalErrorHandle";
-
-
-
+import cors from 'cors';
+import express, { Application } from 'express';
+import router from './app/routes';
+import { globalErrorHandler } from './app/middlewares/globalErrorHandle';
 
 const app: Application = express();
 app.use(express.json());
 
 app.use(cors());
-app.use('/api/v1', router);
+app.use('/api', router);
 
-app.get("/", (req, res) => {
-  res.send("Welcome to tutor link ");
+app.get('/', (req, res) => {
+  res.send('Welcome to tutor link ');
 });
 
-app.use(globalErrorHandle);
+app.use(globalErrorHandler);
 
 export const App = app;

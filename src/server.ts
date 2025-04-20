@@ -1,7 +1,7 @@
 import { Server } from 'http';
 import mongoose from 'mongoose';
 import { App } from './app';
-import Config from './app/Config';
+import Config from './app/config';
 let server: Server;
 
 async function main() {
