@@ -16,9 +16,9 @@ const registerUser = catchAsync(async (req, res) => {
 
 const loginUser = catchAsync(async (req, res) => {
   const result = await AuthServices.loginUser(req.body);
-  const {  accessToken } = result;
+  const { accessToken } = result;
 
-  res.cookie('accessToken',accessToken , {
+  res.cookie('accessToken', accessToken, {
     secure: config.NODE_ENV === 'production',
     httpOnly: true,
   });
@@ -41,10 +41,8 @@ const loginUser = catchAsync(async (req, res) => {
 //   });
 // });
 
-
 export const AuthControllers = {
   registerUser,
   loginUser,
   // refreshToken,
 };
-

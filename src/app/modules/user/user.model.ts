@@ -3,32 +3,33 @@ import bcrypt from 'bcrypt';
 import { model, Schema } from 'mongoose';
 import config from '../../config';
 import { TUser, UserModel } from './user.interface';
-const userSchema = new Schema<TUser> ( {
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  role: { type: String, enum: ['Student', 'Tutor'], required: true },
-  bio: { type: String },
-  subjects: { type: String },
-  gradeLevel: { type: String},
-  availability: {
-    from: { type: Date }, // Start date of availability
-    to: { type: Date }, // End date of availability
-  },
-  price: { type: Number },
-  ratings: [
-    {
-      studentId: { type: Schema.Types.ObjectId, ref: 'User' },
-      rating: { type: Number, min: 1, max: 5 },
-      comment: { type: String },
-      timestamp: { type: Date, default: Date.now },
+const userSchema = new Schema<TUser>(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    role: { type: String, enum: ['Student', 'Tutor'], required: true },
+    bio: { type: String },
+    subjects: { type: String },
+    gradeLevel: { type: String },
+    availability: {
+      from: { type: Date }, // Start date of availability
+      to: { type: Date }, // End date of availability
     },
-  ],
-  averageRating: { type: Number, default: 0 },
-  isBlocked: { type: Boolean, default: false },
-  isDeleted: { type: Boolean, default: false },
-},
-{ timestamps: true }
+    price: { type: Number },
+    ratings: [
+      {
+        studentId: { type: Schema.Types.ObjectId, ref: 'User' },
+        rating: { type: Number, min: 1, max: 5 },
+        comment: { type: String },
+        timestamp: { type: Date, default: Date.now },
+      },
+    ],
+    averageRating: { type: Number, default: 0 },
+    isBlocked: { type: Boolean, default: false },
+    isDeleted: { type: Boolean, default: false },
+  },
+  { timestamps: true },
 );
 
 // / pre middleware function

@@ -1,4 +1,3 @@
-
 import { Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
@@ -6,7 +5,7 @@ export class CustomError extends Error {
   constructor(
     public statusCode: number,
     message: string,
-    public details?: any
+    public details?: any,
   ) {
     super(message);
     Object.setPrototypeOf(this, new.target.prototype);

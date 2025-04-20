@@ -15,17 +15,17 @@ export interface TUser extends Document {
     from: Date; // Start date of availability
     to: Date; // End date of availability
   };
-  price?:number,
+  price?: number;
   ratings?: [
     // Array of ratings (for tutors)
     {
       studentId: ObjectId; // ID of the student who gave the rating
-      rating: Number; // Rating value (1-5)
-      comment: String; // Optional comment
+      rating: number; // Rating value (1-5)
+      comment: string; // Optional comment
       timestamp: Date; // Date of the review
     },
   ];
-  averageRating?: Number;
+  averageRating?: number;
   isBlocked: boolean;
   isDeleted: boolean;
   createdAt: Date;
@@ -43,4 +43,10 @@ export interface UserModel extends Model<TUser> {
     jwtIssuedTimestamp: number,
   ): boolean;
 }
+
+
+
+
+
+
 export type TUserRole = keyof typeof USER_ROLE;

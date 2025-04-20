@@ -1,7 +1,7 @@
 import { z } from 'zod';
 const availabilitySchema = z.object({
-  from: z.string().transform((str) => new Date(str)),  // Convert the string to a Date object
-  to: z.string().transform((str) => new Date(str)),    // Convert the string to a Date object
+  from: z.string().transform((str) => new Date(str)), // Convert the string to a Date object
+  to: z.string().transform((str) => new Date(str)), // Convert the string to a Date object
 });
 const userValidationSchema = z.object({
   body: z.object({
@@ -12,17 +12,18 @@ const userValidationSchema = z.object({
     bio: z.string().optional(),
     subjects: z.string().optional(),
     gradeLevel: z.string().optional(),
-    availability:availabilitySchema.optional()
-    .optional(),
+    availability: availabilitySchema.optional().optional(),
     price: z.number().optional(),
-    ratings: z.array(
-      z.object({
-        studentId: z.string(),
-        rating: z.number().min(1).max(5),
-        comment: z.string().optional(),
-        timestamp: z.date().optional(),
-      })
-    ).optional(),
+    ratings: z
+      .array(
+        z.object({
+          studentId: z.string(),
+          rating: z.number().min(1).max(5),
+          comment: z.string().optional(),
+          timestamp: z.date().optional(),
+        }),
+      )
+      .optional(),
     averageRating: z.number().min(0).max(5).optional(),
     isBlocked: z.boolean().default(false),
     isDeleted: z.boolean().default(false),
