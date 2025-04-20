@@ -1,8 +1,8 @@
 import { StatusCodes } from 'http-status-codes';
 import config from '../../config';
-import { catchAsync } from '../../utilis/catchAsync';
 import { AuthServices } from './auth.service';
 import sendResponse from '../../utilis/sendResponse';
+import { catchAsync } from '../../utilis/catchAsync';
 
 const registerUser = catchAsync(async (req, res) => {
   const result = await AuthServices.registerUserIntoDB(req.body);
@@ -14,21 +14,21 @@ const registerUser = catchAsync(async (req, res) => {
   });
 });
 
-// const loginUser = catchAsync(async (req, res) => {
-//   const result = await AuthServices.loginUser(req.body);
-//   const { refreshToken, token } = result;
+const loginUser = catchAsync(async (req, res) => {
+  const result = await AuthServices.loginUser(req.body);
+  const {  accessToken } = result;
 
-//   res.cookie('refreshToken', refreshToken, {
-//     secure: config.NODE_ENV === 'production',
-//     httpOnly: true,
-//   });
+  res.cookie('accessToken',accessToken , {
+    secure: config.NODE_ENV === 'production',
+    httpOnly: true,
+  });
 
-//   sendResponse(res, {
-//     message: 'Login successful',
-//     statusCode: StatusCodes.OK,
-//     data: { token: token },
-//   });
-// });
+  sendResponse(res, {
+    message: 'Login successful',
+    statusCode: StatusCodes.OK,
+    data: { accessToken: accessToken },
+  });
+});
 
 // const refreshToken = catchAsync(async (req, res) => {
 //   const { refreshToken } = req.cookies;
@@ -44,6 +44,7 @@ const registerUser = catchAsync(async (req, res) => {
 
 export const AuthControllers = {
   registerUser,
-  // loginUser,
+  loginUser,
   // refreshToken,
 };
+

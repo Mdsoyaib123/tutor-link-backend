@@ -5,6 +5,7 @@ import config from '../../config';
 import { TLoginUser } from './auth.interface';
 import { TUser } from '../user/user.interface';
 import { User } from '../user/user.model';
+import { createToken } from './auth.utils';
 
 const registerUserIntoDB = async (payload: TUser) => {
   if (payload.availability) {
@@ -16,45 +17,47 @@ const registerUserIntoDB = async (payload: TUser) => {
   return result;
 };
 
-// const loginUser = async (payload: TLoginUser) => {
-//   // checking if the user is exist
-//   const user = await User.isUserExistsByCustomId(payload.email);
-//   if (!user) {
-//     throw Error( 'User is not found');
-//   }
-//   // checking if the user is already deleted
-//   const isDeleted = user?.isDeleted;
-//   if (isDeleted) {
-//     throw Error( 'The user is deleted');
-//   }
-//   // checking if the user is blocked
-//   const userStatus = user?.isBlocked;
-//   if (userStatus) {
-//     throw Error( 'The User is blocked');
-//   }
-//   if (!(await User.isPasswordMatched(payload?.password, user?.password)))
-//     throw new Error( 'Invalid credentials');
-//   const jwtPayload = {
-//     email: user.email,
-//     role: user.role,
-//   };
-//   const token = createToken(
-//     jwtPayload,
-//     config.jwt_access_token as string,
-//     config.jwt_access_expireIn as string,
-//   );
+const loginUser = async (payload: TLoginUser) => {
+  // checking if the user is exist
+  const user = await User.isUserExistsByCustomId(payload.email);
+  if (!user) {
+    throw Error( 'User is not found');
+  }
+  // checking if the user is already deleted
+  const isDeleted = user?.isDeleted;
+  if (isDeleted) {
+    throw Error( 'The user is deleted');
+  }
+  // checking if the user is blocked
+  const userStatus = user?.isBlocked;
+  if (userStatus) {
+    throw Error( 'The User is blocked');
+  }
+  if (!(await User.isPasswordMatched(payload?.password, user?.password)))
+    throw new Error( 'Invalid credentials');
 
-//   const refreshToken = createToken(
-//     jwtPayload,
-//     config.jwt_refresh_token as string,
-//     config.jwt_refresh_expireIn as string,
-//   );
+  const jwtPayload = {
+    email: user.email,
+    role: user.role,
+  };
 
-//   return {
-//     token,
-//     refreshToken,
-//   };
-// };
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_token as string,
+    config.jwt_access_expireIn as string,
+  );
+
+  // const refreshToken = createToken(
+  //   jwtPayload,
+  //   config.jwt_refresh_token as string,
+  //   config.jwt_refresh_expireIn as string,
+  // );
+
+  return {
+    accessToken,
+    // refreshToken,
+  };
+};
 
 
 // const generateRefreshToken = async (refreshToken: string) => {
@@ -102,6 +105,6 @@ const registerUserIntoDB = async (payload: TUser) => {
 // };
 export const AuthServices = {
   registerUserIntoDB,
-  // loginUser,
+  loginUser,
   // generateRefreshToken,
 };
