@@ -14,7 +14,8 @@ export class CustomError extends Error {
   }
 
   public sendResponse(res: Response) {
-    return res.status(this.statusCode).json({
+    const statusCode = this.statusCode; // Explicitly reference statusCode
+    return res.status(statusCode).json({
       success: false,
       name: this.name,
       message: this.message,
