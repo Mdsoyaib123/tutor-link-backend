@@ -4,7 +4,6 @@ type TSuccessResponse<T> = {
   success?: boolean;
   message: string;
   statusCode: number;
-
   data?: T | T[] | null;
 };
 
