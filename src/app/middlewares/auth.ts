@@ -1,38 +1,51 @@
-import { NextFunction, Request, Response } from "express";
-import jwt, { JwtPayload, TokenExpiredError } from "jsonwebtoken";
-import { UserRole } from "../type/user.type";
-import catchAsync from "../utilis/catchAsync";
-import Config from "../config";
-import { User } from "../modules/User/user.model";
+// auth.ts
+import { NextFunction, Request, Response } from 'express';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import config from '../config';
+import { TUserRole } from '../modules/user/user.interface';
+import { catchAsync } from '../utilis/catchAsync';
+import { User } from '../modules/user/user.model';
 
-const auth = (...requiredRoles: UserRole[]) => {
+export const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    // const token = req.headers.authorization;
     const token = req.headers.authorization;
-
     if (!token) {
-      throw new Error("You are not authorized!");
+      throw Error('You are not authorized');
     }
 
+    // checking if the given token is valid
     const decoded = jwt.verify(
       token,
-      Config.jwt_secret as string
+      config.jwt_access_token as string,
     ) as JwtPayload;
 
     const { role, email } = decoded;
-
-    const user = await User.findOne({ email, role });
+    // checking if the user is exist
+    const user = await User.isUserExistsByCustomId(email);
 
     if (!user) {
-      throw new Error("This user is not found!");
+      throw Error('This user is not found !');
+    }
+    // checking if the user is already deleted
+
+    const isDeleted = user?.isDeleted;
+
+    if (isDeleted) {
+      throw Error('This user is deleted !');
+    }
+
+    // checking if the user is blocked
+    const userStatus = user?.isBlocked;
+
+    if (userStatus) {
+      throw Error('This user is blocked ! !');
     }
 
     if (requiredRoles && !requiredRoles.includes(role)) {
-      throw new Error("You are not authorized!");
+      throw Error('You are not authorized  hi hi!');
     }
-
-    req.user = decoded as JwtPayload & { role: string };
+    req.user = user;
     next();
   });
 };
-
-export default auth;
