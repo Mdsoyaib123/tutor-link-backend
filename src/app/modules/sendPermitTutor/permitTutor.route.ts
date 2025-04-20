@@ -10,4 +10,4 @@ router.patch('/:id', permitControllers.updatePermitByTutor);
 router.get('/get/:userEmail', permitControllers.getPermitsByStudentEmail);
 
 
-export const RequestRouter =router
+export const PermitRouter =router

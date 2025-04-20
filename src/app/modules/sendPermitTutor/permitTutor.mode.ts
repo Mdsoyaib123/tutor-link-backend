@@ -15,5 +15,5 @@ const permitSchema = new Schema<IRequest>({
 }, { timestamps: true });
 
 
-const permitTutor = model<IRequest>('request', permitSchema)
-export default permitTutor
+const PermitTutor = model<IRequest>('PermitTutor', permitSchema)
+export default PermitTutor
