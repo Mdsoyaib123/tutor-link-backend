@@ -1,51 +1,74 @@
-import { NextFunction, Request, Response } from 'express';
-import mongoose from 'mongoose';
-import { StatusCodes } from 'http-status-codes';
-import { CustomError } from '../errors/CustomError';
+import { ErrorRequestHandler } from 'express';
+import { ZodError } from 'zod';
+import config from '../config';
+import { TErrorSources } from '../interface copy/error';
+import handleZodError from '../errors/handleZodError';
+import handleValidationError from '../errors/handleValidationError';
+import handleCastError from '../errors/handleCastError';
+import handleDuplicateError from '../errors/handleDuplicateError';
+import AppError from '../errors/AppError';
 
-const globalErrorHandle = (
-  err: unknown,
-  req: Request,
-  res: Response,
-  next: NextFunction,
+
+export const globalErrorHandler: ErrorRequestHandler = (
+  err,
+  req,
+  res,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  next,
 ) => {
-  // Default error response
-  let statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
+  let statusCode = 500;
   let message = 'Something went wrong';
-  let details: any = null;
 
-  // Handle different error types
-  if (err instanceof CustomError) {
-    return err.sendResponse(res);
-  } else if (err instanceof mongoose.Error.CastError) {
-    statusCode = StatusCodes.BAD_REQUEST;
-    message = 'Invalid ID format';
-    details = { path: err.path, value: err.value };
-  } else if (err instanceof mongoose.Error.ValidationError) {
-    statusCode = StatusCodes.BAD_REQUEST;
-    message = 'Validation failed';
-    details = Object.values(err.errors).map((e) => ({
-      path: e.path,
-      message: e.message,
-    }));
-  } else if ((err as any).code === 11000) {
-    statusCode = StatusCodes.CONFLICT;
-    message = 'Duplicate key error';
-    details = { keyValue: (err as any).keyValue };
+  let errorSources: TErrorSources = [
+    {
+      path: '',
+      message: 'Something went wrong',
+    },
+  ];
+
+  if (err instanceof ZodError) {
+    const simplifiedError = handleZodError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
+  } else if (err?.name === 'ValidationError') {
+    const simplifiedError = handleValidationError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
+  } else if (err?.name === 'CastError') {
+    const simplifiedError = handleCastError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
+  } else if (err?.code === 11000) {
+    const simplifiedError = handleDuplicateError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
+  } else if (err instanceof AppError) {
+    statusCode = err?.statusCode;
+    message = err.message;
+    errorSources = [
+      {
+        path: '',
+        message: err?.message,
+      },
+    ];
   } else if (err instanceof Error) {
     message = err.message;
+    errorSources = [
+      {
+        path: '',
+        message: err?.message,
+      },
+    ];
   }
-
-  // Send the error response
   res.status(statusCode).json({
     success: false,
-    name: err instanceof Error ? err.constructor.name : 'Error',
     message,
-    details,
-    ...(process.env.NODE_ENV === 'development' && {
-      stack: err instanceof Error ? err.stack : undefined,
-    }),
+    statusCode,
+    errorSources,
+    stack: config.NODE_ENV === 'development' ? err?.stack : null,
   });
 };
-
-export default globalErrorHandle;
