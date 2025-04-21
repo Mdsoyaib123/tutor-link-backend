@@ -5,7 +5,7 @@ import { catchAsync } from "../../utilis/catchAsync";
 import sendResponse from "../../utilis/sendResponse";
 
 const createReview = catchAsync(async (req, res) => {
-    const result = await reviewServices.createReviewIntoDB(req.body);
+    const result = await reviewServices.createReview(req.body);
   
     sendResponse(res, {
       message: 'Review registered successfully',
@@ -15,9 +15,9 @@ const createReview = catchAsync(async (req, res) => {
   });
   const getReview = catchAsync(async (req, res) => {
     const { tutorId  } = req.params;
-    const result = await reviewServices.getReviewFromDB(tutorId );
+    const result = await reviewServices.getReview(tutorId );
     sendResponse(res, {
-      message: "Tutor fetched successfully",
+      message: "Review fetched successfully",
       statusCode: StatusCodes.OK,
       data: result,
     });
