@@ -1,5 +1,4 @@
 import { model, Schema } from 'mongoose';
-
 const ReviewSchema = new Schema(
   {
     tutorId: { type: String, required: true },
