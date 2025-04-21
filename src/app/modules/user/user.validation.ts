@@ -3,7 +3,7 @@ const availabilitySchema = z.object({
   from: z.string().transform((str) => new Date(str)), // Convert the string to a Date object
   to: z.string().transform((str) => new Date(str)), // Convert the string to a Date object
 });
-const userValidationSchema = z.object({
+const createUserValidationSchema = z.object({
   body: z.object({
     name: z.string().min(1, 'Name is required'),
     email: z.string().email('Invalid email address'),
@@ -30,5 +30,5 @@ const userValidationSchema = z.object({
   }),
 });
 export const UserValidation = {
-  userValidationSchema,
+  createUserValidationSchema,
 };
