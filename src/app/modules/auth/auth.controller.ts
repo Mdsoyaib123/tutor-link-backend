@@ -4,8 +4,8 @@ import { AuthServices } from './auth.service';
 import sendResponse from '../../utilis/sendResponse';
 import { catchAsync } from '../../utilis/catchAsync';
 
-const registerUser = catchAsync(async (req, res) => {
-  const result = await AuthServices.registerUserIntoDB(req.body);
+const createUser = catchAsync(async (req, res) => {
+  const result = await AuthServices.createUser(req.body);
 
   sendResponse(res, {
     message: 'User registered successfully',
@@ -30,19 +30,8 @@ const loginUser = catchAsync(async (req, res) => {
   });
 });
 
-// const refreshToken = catchAsync(async (req, res) => {
-//   const { refreshToken } = req.cookies;
-//   const result = await AuthServices.generateRefreshToken(refreshToken);
-
-//   sendResponse(res, {
-//     message: 'Access token is retrieved successfully!',
-//     statusCode: StatusCodes.OK,
-//     data: result,
-//   });
-// });
-
 export const AuthControllers = {
-  registerUser,
+  createUser,
   loginUser,
-  // refreshToken,
+
 };

@@ -8,8 +8,8 @@ const router = express.Router();
 router.post('/login', AuthControllers.loginUser);
 router.post(
   '/register',
-  validateRequest(UserValidation.userValidationSchema),
-  AuthControllers.registerUser,
+  validateRequest(UserValidation.createUserValidationSchema),
+  AuthControllers.createUser,
 );
 // router.post(
 //   '/refresh-token',

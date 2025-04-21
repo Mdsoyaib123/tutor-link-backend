@@ -1,6 +1,6 @@
 // user.interface.ts
 import { Document, Model, ObjectId, Types } from 'mongoose';
-import { USER_ROLE } from './user.constant';
+import { userRole } from './user.constant';
 
 export interface TUser extends Document {
   _id: Types.ObjectId;
@@ -49,4 +49,4 @@ export interface UserModel extends Model<TUser> {
 
 
 
-export type TUserRole = keyof typeof USER_ROLE;
+export type TUserRole = keyof typeof userRole;

@@ -5,7 +5,7 @@ import sendResponse from '../../utilis/sendResponse';
 import { catchAsync } from '../../utilis/catchAsync';
 
 const getAllUsers = catchAsync(async (req, res) => {
-  const result = await userServices.getAllUsersFromDB();
+  const result = await userServices.getAllUsers();
   sendResponse(res, {
     message: 'User fetched successfully',
     statusCode: StatusCodes.OK,
@@ -14,7 +14,7 @@ const getAllUsers = catchAsync(async (req, res) => {
 });
 
 const getAllTutors = catchAsync(async (req, res) => {
-  const result = await userServices.getAllTutorsFromDB();
+  const result = await userServices.getAllTutors();
   sendResponse(res, {
     message: 'Tutors fetched successfully',
     statusCode: StatusCodes.OK,
@@ -23,7 +23,7 @@ const getAllTutors = catchAsync(async (req, res) => {
 });
 const getTutorById = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await userServices.getTutorByIdFromDB(id);
+  const result = await userServices.getTutorById(id);
   sendResponse(res, {
     message: 'Tutor fetched successfully',
     statusCode: StatusCodes.OK,
@@ -32,7 +32,7 @@ const getTutorById = catchAsync(async (req, res) => {
 });
 const getSingleUser = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await userServices.getUserFromDB(id);
+  const result = await userServices.getUser(id);
   sendResponse(res, {
     message: 'User fetched successfully',
     statusCode: StatusCodes.OK,
@@ -41,7 +41,7 @@ const getSingleUser = catchAsync(async (req, res) => {
 });
 const updateUser = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await userServices.updateUserFromDB(id, req.body);
+  const result = await userServices.updateUser(id, req.body);
   sendResponse(res, {
     message: 'User is updated successfully',
     statusCode: StatusCodes.OK,
