@@ -4,6 +4,7 @@ import router from './app/routes';
 import { globalErrorHandler } from './app/middlewares/globalErrorHandle';
 
 const app: Application = express();
+
 app.use(express.json());
 
 app.use(cors());
