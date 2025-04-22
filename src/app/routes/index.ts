@@ -15,7 +15,7 @@ const moduleRoutes = [
     route: UserRoutes,
   },
   {
-    path: '/permit-tutor',
+    path: '/permits',
     route: UserRoutes,
   },
   {

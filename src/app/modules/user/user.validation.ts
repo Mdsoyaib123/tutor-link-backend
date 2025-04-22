@@ -20,7 +20,7 @@ const createUserValidationSchema = z.object({
           studentId: z.string(),
           rating: z.number().min(1).max(5),
           comment: z.string().optional(),
-          timestamp: z.date().optional(),
+          timestamp: z.coerce.date().optional(),
         }),
       )
       .optional(),
