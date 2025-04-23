@@ -1,13 +1,12 @@
 import { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
-import config from '../config';
 import { TErrorSources } from '../interface copy/error';
 import handleZodError from '../errors/handleZodError';
 import handleValidationError from '../errors/handleValidationError';
 import handleCastError from '../errors/handleCastError';
 import handleDuplicateError from '../errors/handleDuplicateError';
 import AppError from '../errors/AppError';
-
+import Config from '../Config';
 
 export const globalErrorHandler: ErrorRequestHandler = (
   err,
@@ -69,6 +68,6 @@ export const globalErrorHandler: ErrorRequestHandler = (
     message,
     statusCode,
     errorSources,
-    stack: config.NODE_ENV === 'development' ? err?.stack : null,
+    stack: Config.NODE_ENV === 'development' ? err?.stack : null,
   });
 };

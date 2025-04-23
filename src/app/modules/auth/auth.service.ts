@@ -1,10 +1,9 @@
 
-import config from '../../config';
-
 import { TLoginUser } from './auth.interface';
 import { TUser } from '../user/user.interface';
 import { User } from '../user/user.model';
 import { createToken } from './auth.utils';
+import Config from '../../Config';
 
 const createUser = async (payload: TUser) => {
   if (payload.availability) {
@@ -42,8 +41,8 @@ const loginUser = async (payload: TLoginUser) => {
 
   const accessToken = createToken(
     jwtPayload,
-    config.jwt_access_token as string,
-    config.jwt_access_expireIn as string,
+    Config.jwt_access_token as string,
+    Config.jwt_access_expireIn as string,
   );
 
   return {
@@ -54,5 +53,4 @@ const loginUser = async (payload: TLoginUser) => {
 export const AuthServices = {
   createUser,
   loginUser,
-  
 };
