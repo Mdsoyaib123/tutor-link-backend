@@ -1,8 +1,8 @@
 import { StatusCodes } from 'http-status-codes';
-import config from '../../config';
 import { AuthServices } from './auth.service';
 import sendResponse from '../../utilis/sendResponse';
 import { catchAsync } from '../../utilis/catchAsync';
+import Config from '../../Config';
 
 const createUser = catchAsync(async (req, res) => {
   const result = await AuthServices.createUser(req.body);
@@ -19,7 +19,7 @@ const loginUser = catchAsync(async (req, res) => {
   const { accessToken } = result;
 
   res.cookie('accessToken', accessToken, {
-    secure: config.NODE_ENV === 'production',
+    secure: Config.NODE_ENV === 'production',
     httpOnly: true,
   });
 
@@ -33,5 +33,4 @@ const loginUser = catchAsync(async (req, res) => {
 export const AuthControllers = {
   createUser,
   loginUser,
-
 };
