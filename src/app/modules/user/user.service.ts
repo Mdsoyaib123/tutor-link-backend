@@ -1,4 +1,3 @@
-
 import { TUser } from './user.interface';
 import { User } from './user.model';
 
@@ -29,14 +28,17 @@ const getUser = async (id: string) => {
   }
   return result;
 };
-const updateUser = async (id: string, payload: Partial<TUser>) => {
-  const isUsersExists = await User.findById(id);
+
+const updateUser = async (email: string, payload: Partial<TUser>) => {
+  const isUsersExists = await User.findOne({ email });
   if (!isUsersExists) {
-    throw Error('This User is not found !');
+    throw new Error('This User is not found!');
   }
-  const result = await User.findByIdAndUpdate(id, payload, {
+
+  const result = await User.findOneAndUpdate({ email }, payload, {
     new: true,
     runValidators: true,
+    upsert: true,
   });
 
   return result;

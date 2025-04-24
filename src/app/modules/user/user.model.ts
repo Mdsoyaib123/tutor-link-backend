@@ -26,6 +26,8 @@ const userSchema = new Schema<TUser>(
         timestamp: { type: Date, default: Date.now },
       },
     ],
+    phone:{type:String},
+    address:{type:String},
     averageRating: { type: Number, default: 0 },
     isBlocked: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },

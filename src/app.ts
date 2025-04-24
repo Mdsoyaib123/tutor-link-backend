@@ -6,8 +6,13 @@ import { globalErrorHandler } from './app/middlewares/globalErrorHandle';
 const app: Application = express();
 
 app.use(express.json());
+const corsOptions = {
+  origin: ['http://localhost:3000'], // allow multiple origins
+  credentials: true, // allow cookies, authorization headers, etc.
+};
 
-app.use(cors());
+// Apply CORS with options
+app.use(cors(corsOptions));
 app.use('/api', router);
 
 app.get('/', (req, res) => {
