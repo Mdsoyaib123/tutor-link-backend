@@ -2,9 +2,10 @@
 import { Request, Response } from "express"
 
 import { StatusCodes } from "http-status-codes";
-import catchAsync from "../../utilis/catchAsync";
+
 import sendResponse from "../../utilis/sendResponse";
 import { permitServices } from "./permitTutor.service";
+import { catchAsync } from "../../utilis/catchAsync";
 
 
 const createPermit=catchAsync(async (req:Request, res:Response) => {
@@ -49,6 +50,7 @@ const getPermitsByTutorId = async (req: Request, res: Response) => {
     });
   }
 };
+
 const updatePermitByTutor = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const updateData = req.body; // Contains status, comments, etc.
@@ -61,6 +63,7 @@ const updatePermitByTutor = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const getPermitsByStudentEmail = async (req: Request, res: Response) => {
   try {
     const { userEmail } = req.params;
