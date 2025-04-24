@@ -16,7 +16,7 @@ const sendPermitService = async (payload: IRequest) => {
   // const user = await User.isUserExistsByCustomId(userData?.email);
 
   const result = await PermitTutor.create(payload);
-  console.log('result=', result);
+  // console.log('result=', result);
   return result;
 };
 
