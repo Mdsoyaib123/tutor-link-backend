@@ -24,6 +24,8 @@ const createUserValidationSchema = z.object({
         }),
       )
       .optional(),
+      phone:z.string().optional(),
+      address:z.string().optional(),
     averageRating: z.number().min(0).max(5).optional(),
     isBlocked: z.boolean().default(false),
     isDeleted: z.boolean().default(false),
