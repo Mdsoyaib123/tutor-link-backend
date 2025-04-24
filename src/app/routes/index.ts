@@ -3,6 +3,7 @@ import { UserRoutes } from '../modules/user/user.route';
 import { AuthRoutes } from '../modules/auth/auth.route';
 import { PaymentRouter } from '../modules/payment/payment.route';
 import { ReviewRoutes } from '../modules/reviews/review.route';
+import { PermitRouter } from '../modules/sendPermitTutor/permitTutor.route';
 
 const router = Router();
 
@@ -17,7 +18,7 @@ const moduleRoutes = [
   },
   {
     path: '/permits',
-    route: UserRoutes,
+    route: PermitRouter,
   },
   {
     path: '/payment',
