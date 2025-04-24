@@ -6,6 +6,6 @@ router.get('/', userControllers.getAllUsers);
 router.get('/tutors', userControllers.getAllTutors);
 router.get('/tutors/:id', userControllers.getTutorById);
 router.get('/:id', userControllers.getSingleUser);
-router.patch('/:id', userControllers.updateUser);
+router.patch('/:email', userControllers.updateUser);
 
 export const UserRoutes = router;

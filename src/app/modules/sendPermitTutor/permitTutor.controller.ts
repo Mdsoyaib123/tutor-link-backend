@@ -2,9 +2,9 @@
 import { Request, Response } from "express"
 
 import { StatusCodes } from "http-status-codes";
-import catchAsync from "../../utilis/catchAsync";
 import sendResponse from "../../utilis/sendResponse";
 import { permitServices } from "./permitTutor.service";
+import { catchAsync } from "../../utilis/catchAsync";
 
 
 const createPermit=catchAsync(async (req:Request, res:Response) => {

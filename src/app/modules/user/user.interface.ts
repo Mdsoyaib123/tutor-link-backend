@@ -25,9 +25,12 @@ export interface TUser extends Document {
       timestamp: Date; // Date of the review
     },
   ];
+  phone?:string,
+  address?:string,
   averageRating?: number;
   isBlocked: boolean;
   isDeleted: boolean;
+
   createdAt: Date;
   updatedAt: Date;
 }
