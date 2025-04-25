@@ -46,8 +46,8 @@ const updatePermitByTutor = async (
   updateData: Partial<IRequest>,
 ) => {
   try {
-    const updatedRequest = await PermitTutor.findByIdAndUpdate(
-      requestId,
+    const updatedRequest = await PermitTutor.findOneAndUpdate(
+      {tutorId:requestId},
       updateData,
       { new: true }, // Returns the updated document
     );
