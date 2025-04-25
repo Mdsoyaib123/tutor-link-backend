@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import cors from 'cors';
 import express, { Application, Request, Response } from 'express';
 import router from './app/routes';
@@ -89,7 +90,7 @@ app.get('/checkout-session/:sessionId', async (req: Request, res: Response) => {
 
     console.log('Payment session details:', session);
 
-    const { email, id, isPayment, totalPrice } = session.metadata;
+    const {  id,  } = session.metadata;
 
     // Now fetch Tutor  permit data
     const tutorPermit = await PermitTutor.findByIdAndUpdate(
