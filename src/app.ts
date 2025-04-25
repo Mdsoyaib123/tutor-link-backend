@@ -21,15 +21,19 @@ app.get('/', (req, res) => {
   res.send('Welcome to tutor link ');
 });
 
+
 // eslint-disable-next-line @typescript-eslint/no-require-imports
+
 const stripe = require('stripe')(Config.stripe_sk);
 
 app.post('/create-checkout-session', async (req, res) => {
   console.log('test');
   try {
+
     const { data } = req.body;
 
     console.log('data', data);
+
     const lineItems = [
       {
         price_data: {
@@ -38,6 +42,8 @@ app.post('/create-checkout-session', async (req, res) => {
             name: data.tutorId.name,
           },
           unit_amount: Math.round(data.price * 100),
+          
+          },
         },
         quantity: 1, // Ensure quantity is included
       },
@@ -47,6 +53,7 @@ app.post('/create-checkout-session', async (req, res) => {
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
+
       success_url: `http://localhost:3000/sucess?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: 'http://localhost:3000/failed',
       metadata: {
@@ -54,6 +61,7 @@ app.post('/create-checkout-session', async (req, res) => {
         totalPrice: data.price,
         isPayment: data.isPayment,
         id: data._id,
+
       },
     });
 
@@ -72,7 +80,10 @@ app.post('/create-checkout-session', async (req, res) => {
     res.status(500).json({ error: 'Failed to create session' });
   }
 });
+
 app.get('/checkout-session/:sessionId', async (req: Request, res: Response) => {
+
+
   try {
     const session = await stripe.checkout.sessions.retrieve(
       req.params.sessionId,
@@ -101,6 +112,7 @@ app.get('/checkout-session/:sessionId', async (req: Request, res: Response) => {
 
       // productPrice: totalPrice,
       tutorPermit,
+   
     });
   } catch (error) {
     console.error('Error retrieving checkout session:', error);
