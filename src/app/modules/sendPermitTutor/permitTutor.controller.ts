@@ -1,22 +1,22 @@
 // request.controller.ts
-import { Request, Response } from "express"
+import { Request, Response } from 'express';
 
-import { StatusCodes } from "http-status-codes";
+import { StatusCodes } from 'http-status-codes';
 
-import sendResponse from "../../utilis/sendResponse";
-import { permitServices } from "./permitTutor.service";
-import { catchAsync } from "../../utilis/catchAsync";
+import sendResponse from '../../utilis/sendResponse';
+import { permitServices } from './permitTutor.service';
+import { catchAsync } from '../../utilis/catchAsync';
 
-
-const createPermit=catchAsync(async (req:Request, res:Response) => {
-  const result = await permitServices.sendPermitService(req.body)
+const createPermit = catchAsync(async (req: Request, res: Response) => {
+  const result = await permitServices.sendPermitService(req.body);
+  console.log('inside', req.body);
   sendResponse(res, {
     statusCode: StatusCodes.CREATED,
     message: 'Request is sent successfully',
     data: result,
   });
 });
-const getAllPermits = catchAsync(async (req:Request, res:Response) => {
+const getAllPermits = catchAsync(async (req: Request, res: Response) => {
   const result = await permitServices.getALLPermitsFromDB();
   sendResponse(res, {
     message: 'Requests fetched successfully',
@@ -33,13 +33,13 @@ const getPermitsByTutorId = async (req: Request, res: Response) => {
     if (!requests || requests.length === 0) {
       res.json({
         status: false,
-        message: "No requests found for this tutor.",
+        message: 'No requests found for this tutor.',
       });
     }
 
     res.json({
       status: true,
-      message: "Requests fetched successfully",
+      message: 'Requests fetched successfully',
       data: requests,
     });
   } catch (error) {
@@ -59,7 +59,7 @@ const updatePermitByTutor = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
-    message: "Request updated successfully",
+    message: 'Request updated successfully',
     data: result,
   });
 });
@@ -71,7 +71,7 @@ const getPermitsByStudentEmail = async (req: Request, res: Response) => {
     const requests = await permitServices.getPermitsForStudent(userEmail);
     res.json({
       status: true,
-      message: "Requests fetched successfully",
+      message: 'Requests fetched successfully',
       data: requests,
     });
   } catch (error) {
@@ -83,10 +83,10 @@ const getPermitsByStudentEmail = async (req: Request, res: Response) => {
   }
 };
 
-
 export const permitControllers = {
   createPermit,
   getPermitsByTutorId,
   getPermitsByStudentEmail,
-  getAllPermits,updatePermitByTutor
+  getAllPermits,
+  updatePermitByTutor,
 };
