@@ -1,107 +1,112 @@
 import cors from 'cors';
-import express, { Application } from 'express';
+import express, { Application, Request, Response } from 'express';
 import router from './app/routes';
 import { globalErrorHandler } from './app/middlewares/globalErrorHandle';
+import Config from './app/Config';
+import PermitTutor from './app/modules/sendPermitTutor/permitTutor.mode';
 
 const app: Application = express();
 
 app.use(express.json());
+const corsOptions = {
+  origin: ['http://localhost:3000'], // allow multiple origins
+  credentials: true, // allow cookies, authorization headers, etc.
+};
 
-app.use(cors());
+// Apply CORS with options
+app.use(cors(corsOptions));
 app.use('/api', router);
 
 app.get('/', (req, res) => {
   res.send('Welcome to tutor link ');
 });
 
-// const stripe = require('stripe')(Config.stripe_sk);
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const stripe = require('stripe')(Config.stripe_sk);
 
-// app.post('/create-checkout-session', async (req, res) => {
-//   console.log('test');
-//   try {
-//     const { product, user } = req.body;
+app.post('/create-checkout-session', async (req, res) => {
+  console.log('test');
+  try {
+    const { data } = req.body;
 
-//     console.log('product', product);
-//     console.log('user', user);
-//     const lineItems = [
-//       {
-//         price_data: {
-//           currency: 'usd',
-//           product_data: {
-//             name: product.title,
-//           },
-//           unit_amount: Math.round(product.price * 100),
-//         },
-//         quantity: 1, // Ensure quantity is included
-//       },
-//     ];
+    console.log('data', data);
+    const lineItems = [
+      {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: data.tutorId.name,
+          },
+          unit_amount: Math.round(data.price * 100),
+        },
+        quantity: 1, // Ensure quantity is included
+      },
+    ];
 
-//     const session = await stripe.checkout.sessions.create({
-//       payment_method_types: ['card'],
-//       line_items: lineItems,
-//       mode: 'payment',
-//       success_url: `https://book-shop-frontend-vert.vercel.app/success?session_id={CHECKOUT_SESSION_ID}`,
-//       cancel_url: 'https://book-shop-frontend-vert.vercel.app/failed',
-//       metadata: {
-//         email: user.email,
-//         product: product._id,
-//         quantity: 1,
-//         totalPrice: Math.round(product.price * 100),
-//         author: product.author,
-//       },
-//     });
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: lineItems,
+      mode: 'payment',
+      success_url: `http://localhost:3000/sucess?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: 'http://localhost:3000/failed',
+      metadata: {
+        email: data.userEmail,
+        totalPrice: data.price,
+        isPayment: data.isPayment,
+        id: data._id,
+      },
+    });
 
-//     // const paymentConfirmation = await stripe.checkout.sessions.retrieve(
-//     //   session.id,
-//     // );
+    // const paymentConfirmation = await stripe.checkout.sessions.retrieve(
+    //   session.id,
+    // );
 
-//     console.log('paymentConfirmation', session);
-//     // const paymentIntent = await stripe.paymentIntents.retrieve(session.id);
+    console.log('paymentConfirmation', session);
+    // const paymentIntent = await stripe.paymentIntents.retrieve(session.id);
 
-//     // console.log(`Payment status: ${paymentIntent.status}`);
+    // console.log(`Payment status: ${paymentIntent.status}`);
 
-//     res.json({ id: session.id });
-//   } catch (error) {
-//     console.error('Error creating checkout session:', error);
-//     res.status(500).json({ error: 'Failed to create session' });
-//   }
-// });
-// app.get('/checkout-session/:sessionId', async (req, res) => {
-//   try {
-//     const session = await stripe.checkout.sessions.retrieve(
-//       req.params.sessionId,
-//     );
+    res.json({ id: session.id });
+  } catch (error) {
+    console.error('Error creating checkout session:', error);
+    res.status(500).json({ error: 'Failed to create session' });
+  }
+});
+app.get('/checkout-session/:sessionId', async (req: Request, res: Response) => {
+  try {
+    const session = await stripe.checkout.sessions.retrieve(
+      req.params.sessionId,
+    );
 
-//     console.log('Payment session details:', session);
+    console.log('Payment session details:', session);
 
-//     const {
-//       email,
-//       product: productId,
-//       quantity,
-//       totalPrice,
-//     } = session.metadata;
+    const { email, id, isPayment, totalPrice } = session.metadata;
 
-//     // Now fetch product details from DB using productId
-//     const product = await Book.findById(productId); // Assuming `Product` is your Mongoose model
+    // Now fetch Tutor  permit data
+    const tutorPermit = await PermitTutor.findByIdAndUpdate(
+      id,
+      {
+        isPayment: true,
+      },
+      { new: true },
+    ); // Assuming `Product` is your Mongoose model
 
-//     if (!product) {
-//       return res.status(404).json({ error: 'Product not found' });
-//     }
+    if (!tutorPermit) {
+      return res.status(404).json({ error: 'tutorPermit not found' });
+    }
 
-//     res.json({
-//       paymentStatus: session.payment_status,
-//       userEmail: email,
-//       productId: productId,
-//       productQuantity: quantity,
-//       productPrice: totalPrice,
-//       productTitle: product.title,
-//       productAuthor: product.author,
-//     });
-//   } catch (error) {
-//     console.error('Error retrieving checkout session:', error);
-//     res.status(500).json({ error: 'Failed to retrieve session details' });
-//   }
-// });
+    res.json({
+      // paymentStatus: session.payment_status,
+      // userEmail: email,
+
+      // productPrice: totalPrice,
+      tutorPermit,
+    });
+  } catch (error) {
+    console.error('Error retrieving checkout session:', error);
+    res.status(500).json({ error: 'Failed to retrieve session details' });
+  }
+});
 app.use(globalErrorHandler);
 
 export const App = app;
