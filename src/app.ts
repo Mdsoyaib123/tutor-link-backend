@@ -42,8 +42,6 @@ app.post('/create-checkout-session', async (req, res) => {
             name: data.tutorId.name,
           },
           unit_amount: Math.round(data.price * 100),
-          
-          },
         },
         quantity: 1, // Ensure quantity is included
       },
