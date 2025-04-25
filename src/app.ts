@@ -81,8 +81,6 @@ app.post('/create-checkout-session', async (req, res) => {
 });
 
 app.get('/checkout-session/:sessionId', async (req: Request, res: Response) => {
-
-
   try {
     const session = await stripe.checkout.sessions.retrieve(
       req.params.sessionId,
@@ -90,7 +88,7 @@ app.get('/checkout-session/:sessionId', async (req: Request, res: Response) => {
 
     console.log('Payment session details:', session);
 
-    const {  id,  } = session.metadata;
+    const { email, id, isPayment, totalPrice } = session.metadata;
 
     // Now fetch Tutor  permit data
     const tutorPermit = await PermitTutor.findByIdAndUpdate(
@@ -99,7 +97,7 @@ app.get('/checkout-session/:sessionId', async (req: Request, res: Response) => {
         isPayment: true,
       },
       { new: true },
-    ); // Assuming `Product` is your Mongoose model
+    ); // Assuming Product is your Mongoose model
 
     if (!tutorPermit) {
       return res.status(404).json({ error: 'tutorPermit not found' });
@@ -111,13 +109,15 @@ app.get('/checkout-session/:sessionId', async (req: Request, res: Response) => {
 
       // productPrice: totalPrice,
       tutorPermit,
-   
     });
   } catch (error) {
     console.error('Error retrieving checkout session:', error);
     res.status(500).json({ error: 'Failed to retrieve session details' });
   }
 });
+
+
+
 app.use(globalErrorHandler);
 
 export const App = app;
